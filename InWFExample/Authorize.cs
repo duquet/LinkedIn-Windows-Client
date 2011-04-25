@@ -46,22 +46,34 @@ namespace InWFExample
         private string oauth_token = null;
         private string oauth_verifier = null;
 
-        private void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        private void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs? e)
         {
-            string responsed = e.Url.ToString();
-            if (responsed.StartsWith("http://localhost/inverify"))
-            {
-                responsed = responsed.Replace("http://localhost/inverify?", "");
-                string[] args = responsed.Split('&');
-                foreach(string arg in args)
-                {
-                    string[] values  = arg.Split('=');
-                    if(values[0] == "oauth_token")
-                        oauth_token = values[1];
+            //Andrew D = Andrew Duquet
+            //Andrew D: this method gets hit about four times in the Oauth Dance and finally gets called prior to navigating to the callback URL 
+            //                specified in the developer's API setup page so grab the oauth token and verifier and if both set then call method AuthorizeCompleted
+
+            string responsed = e.Url.ToString?();
+            //Andrew D: replaced " http://localhost/inverify" with " http://www.google.com"
+            if (responsed.StartsWith?(" http://www.google.com"))
+           {
+
+               //Andrew D: replaced " http://localhost/inverify?" with " http://google.com?"
+               responsed = responsed.Replace(" http://www.google.com?", "");
+
+               string[] args = responsed.Split('&');
+
+               foreach(string arg in args)
+               {
+                    string[] values = arg.Split('=');
+
+                    //AndrewD: replaced "oauth_token" with " http://www.google.com/?oauth_token" 
+                    if (values[0] == " http://www.google.com/?oauth_token")
+                          oauth_token = values[1];
 
                     if(values[0] == "oauth_verifier")
-                        oauth_verifier = values[1];
-                }
+                          oauth_verifier = values[1];
+               }
+
             }
 
             if (oauth_token != null && oauth_verifier != null)
